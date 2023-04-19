@@ -211,6 +211,12 @@ class Trade(object):
         '''
         return self.data.num2date(self.dtopen, tz=tz, naive=naive)
 
+    def profit(self, price):
+        '''Returns the profit rate by price'''
+        coe = 1 if self.size >0 else -1
+        diff = coe*(price - self.price)/self.price
+        return diff
+
     def close_datetime(self, tz=None, naive=True):
         '''Returns a datetime.datetime object with the datetime in which
         the trade was closed
