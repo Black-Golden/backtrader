@@ -175,6 +175,7 @@ class Trade(object):
 
         self.pnl = 0.0
         self.pnlcomm = 0.0
+        self.refPrice = price
 
         self.justopened = False
         self.isopen = False
@@ -211,11 +212,24 @@ class Trade(object):
         '''
         return self.data.num2date(self.dtopen, tz=tz, naive=naive)
 
-    def profit(self, price):
+    def profit(self, price=None):
         '''Returns the profit rate by price'''
+        if price is None:
+            price = self.data.close[0]
         coe = 1 if self.size >0 else -1
         diff = coe*(price - self.price)/self.price
-        return diff
+        return round(diff, 5)
+
+    def maxDrawDown(self, price=None):
+        '''Returns the profit rate by price'''
+        if price is None:
+            price = self.data.close[0]
+        func = max if self.size >0 else min
+        self.refPrice = func(self.refPrice, price)
+
+        coe = 1 if self.size >0 else -1
+        diff = coe*(self.refPrice - price)/self.refPrice
+        return round(diff, 5)
 
     def close_datetime(self, tz=None, naive=True):
         '''Returns a datetime.datetime object with the datetime in which
