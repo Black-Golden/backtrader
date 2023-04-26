@@ -280,6 +280,8 @@ class Trade(object):
 
         # Check if it has been currently opened
         self.justopened = bool(not oldsize and size)
+        if not self.refPrice:
+            self.refPrice = price
 
         if self.justopened:
             self.baropen = len(self.data)
